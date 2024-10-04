@@ -155,7 +155,12 @@ ggplot(data = surveys,
        ) +
   geom_point(alpha = 0.5) +
   facet_wrap(~species_id) +
-  labs(x = "Weight of Animal (in grams)", y = "Length of Hindfoot (in mm)")
+  labs(x = "Weight of Animal (in grams)",
+       y = "",
+       title = "Relationship Between Animal Body Weight and Hindfoot
+Length Across Different Species", 
+      subtitle = "Length of Hindfoot (in mm)"
+       )
 
 ```
 
@@ -186,7 +191,19 @@ It takes a larger cognitive load to read text that is rotated. It is common prac
 
 ```{r}
 #| label: boxplot
-
+ggplot(data = surveys, 
+       mapping = aes(x = species_id, 
+          y = weight
+                    )
+       ) + 
+geom_boxplot(outliers = FALSE) +
+geom_jitter(
+   color = "orange", 
+          alpha = 0.9
+            ) +
+labs(x = "Species", 
+     y = "Weight of Animal (in grams)", 
+     title = "Comparing Animal Weight Distributions Across Species")
 
 ```
 
