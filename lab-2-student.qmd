@@ -5,7 +5,10 @@ format: html
 editor: source
 embed-resources: true
 code-tools: true
+self-contained: true
 code-fold: true
+message: false
+warning: false
 execute:
   echo: true
   error: true 
@@ -106,20 +109,29 @@ represent:
 ```{r}
 #| label: load-data
 
-surveys <- read_csv("data/surveys.csv")
+library(here)
+surveys <- read_csv(here("data/surveys.csv"))
+
+glimpse(surveys)
 
 
 ```
+Reflection: In question 1, I did not correctly read in the data. I did not use the here() function, but rather used a relative path. I did not fully understand how to read in data, but now realize it is beneficial to use the here() function because it findas the root directory of the project, making it easier to locate the data files. 
 
 **2. What are the dimensions (# of rows and columns) of these data?**
 
 <!-- You can either write code here or in the code chunk for #1, but I **must** see the code you used to address this question!  -->
+
 This dataset has 30463 rows and 15 columns. 
+
+Reflection: Originally, I did not include any code to provide the reader with information about the data set. I added the glimpse() function to show a concise representation of the data, which includes the dimensions of the data. I now realize that while I could see the details of the data set because I had direct access to the data file, the readers of my Quarto document were not able to see it. By including the glimpse() function, I am able to provide insight about the data set being used to the reader such as the dimensions of the data.
 
 **3. What are the data types of the variables in this dataset?**
 
 <!-- You can either write code here or in the code chunk for #1, but I **must** see the code you used to address this question!  -->
 The data types are chr, which is a categorical variable, dbl, which is a continuous numerical variable, and date. 
+
+Reflection: Similarly to question 2, I did not include any code to provide the reader with information about the data set. I added the glimpse() function to show a concise representation of the data, which includes the data types of the variables in the data set. Again, I understand now that while I could see the details of the data set because I had direct access to the data file, the readers of my Quarto document were not able to see it. By including the glimpse() function, I am able to provide insight about the data set being used to the reader such as the data types of the variables. 
 
 # Exploratory Data Analysis with **`ggplot2`**
 
@@ -154,15 +166,17 @@ ggplot(data = surveys,
                     )
        ) +
   geom_point(alpha = 0.5) +
-  facet_wrap(~species_id) +
-  labs(x = "Weight of Animal (in grams)",
+  facet_wrap(~species) +
+  labs(x = "Weight of Rodent (in grams)",
        y = "",
-       title = "Relationship Between Animal Body Weight and Hindfoot
-Length Across Different Species", 
+       title = "Relationship Between Body Weight and Hindfoot
+Length Across Different Rodent Species", 
       subtitle = "Length of Hindfoot (in mm)"
        )
 
 ```
+
+Reflection: I used the wrong variable originally. This led me to produce an incorrect visual. In my revision, I made sure to use the correct variable and will pay closer attention to the instructions to ensure I am using the correct variable. 
 
 We can see there are **a lot** of points plotted on top of each other. Let's try and modify this plot to extract more information from it.
 
@@ -177,7 +191,11 @@ subsets and see if that allows for us to see the trends a bit better.
 
 <!-- Add code to the scatterplot you created for question 4 (and modified for question 5)! -->
 
+Reflection: I accidentally used the species_id variables rather than the species variable in my scatterplot. In my revision, I fixed this by substituting species_id for species. For the future, I will make sure to read the instructions more carefully so that I am using the correct variable.
+
 **7. No plot is complete without axis labels and a title. Include reader friendly labels and a title to your plot.**
+
+Reflection: I originally did not include specific enough labels in my plots and did not incorporate the term, rodent, which is the type of species being examined.. I added the word rodent instead species in my plot title to specify the taxon of of species and changed "Weight of Animal (in grams)" to  "Weight of Rodent (in grams)" to make it more clear and specific. I understand now that it is important to be as specific and clear in my visuals to make it as simple and easy for the reader to interpret. 
 
 <!-- Continue to modify the plot you originally created for question 4! --> 
 
@@ -192,24 +210,28 @@ It takes a larger cognitive load to read text that is rotated. It is common prac
 ```{r}
 #| label: boxplot
 ggplot(data = surveys, 
-       mapping = aes(x = species_id, 
+       mapping = aes(x = species, 
           y = weight
                     )
        ) + 
 geom_boxplot(outliers = FALSE) +
 geom_jitter(
    color = "orange", 
-          alpha = 0.5
+          alpha = 0.1
             ) +
+  theme(axis.text.x = element_text(angle = 45)
+        ) +
 labs(x = "Species", 
-     y = "Weight of Animal (in grams)", 
-     title = "Comparing Animal Weight Distributions Across Species")
+     y = "Weight (in grams)", 
+     title = "Weight Distributions Across Rodent Species")
 
 ```
 
 **10. Create side-by-side boxplots to visualize the distribution of weight within each species.**
 
 A fundamental complaint of boxplots is that they do not plot the raw data. However, with **ggplot** we can add the raw points on top of the boxplots!
+
+Reflection: As I explained earlier, I accidentally used the species_id variables rather than the species variable in my scatterplot. In my revision, I fixed this by substituting species_id for species. For the future, I will make sure to read the instructions more carefully so that I am using the correct variable.
 
 **11. Add another layer to your previous plot that plots each observation.**
 
@@ -228,6 +250,8 @@ That should look a bit better! But its really hard to see the points when everyt
 to use whatever color you wish! Some of my favorites are "orange3" and
 "steelblue".
 
+Reflection: I changed my alpha from 0.5 to 0.1 to make the points more transparent. I now see that making the points more transparent makes it easier to see the relations between the information the boxplot presents, including the five number summary, and the observations. 
+
 <!-- Continue to modify the plot you made for question 10! -->
 
 Great! Now that you can see the points, you should notice something odd: there
@@ -242,6 +266,8 @@ are better labels for a plot's axes and legend.
 
 **15. Modify the $x$-axis and $y$-axis labels to describe what is being plotted. Be sure to include any necessary units! You might also be getting overlap in the species names -- use `theme(axis.text.x = ____)` or `theme(axis.text.y = ____)` to turn the species axis labels 45 degrees.**
 
+Reflection: When I used species_id, the categories of the species_id variable did not overlap, but once I used the correct species variable, the categories overlapped. Considering this, I used   theme(axis.text.x = element_text(angle = 45) to turn the species axis labels 45 degrees. By incorporating this in my revision, all of the labels are readable for the viewer, making the visual more easy to understand. Additionally, with my plot titles and axis labels, I simplified the weight axis label to just say "Weight (in grams)" rather than "Weight of Rodent (in grams)" to be less repetitive. I did not realize that these labels were repetitive, but now see this and realize I should have my labels be as simple as possible, while still providing sufficient information to the reader.
+
 <!-- Continue to modify the plot you made for question 10! -->
 
 Some people (and journals) prefer for boxplots to be stacked with a specific orientation! Let's practice changing the orientation of our boxplots.
@@ -254,17 +280,19 @@ Some people (and journals) prefer for boxplots to be stacked with a specific ori
 #| 
 ggplot(data = surveys, 
        mapping = aes(x = weight, 
-          y = species_id
+          y = species
                     )
        ) + 
 geom_boxplot(outliers = FALSE) +
 geom_jitter(
    color = "orange", 
-          alpha = 0.5
+          alpha = 0.1
             ) +
-labs(x = "Weight of Animal (in grams)", 
-     y = "Species", 
-     title = "Comparing Animal Weight Distributions Across Species")
+   # theme(axis.text.y = element_text(angle = 45)
+        #) +
+labs(x = "Weight (in grams)", 
+     y = "Species of Rodents", 
+     title = "Weight Distributions Across Rodents")
 
 ```
 
@@ -300,7 +328,7 @@ might want to look up the help documentation for `aov()`.
 ```{r}
 #| label: anova
 
-species_mod <- aov(formula = weight ~species_id, 
+species_mod <- aov(formula = weight ~species, 
   data = surveys
                 )
 
@@ -310,7 +338,9 @@ summary(species_mod)
 
 **18. Based on the results of the ANOVA F-test, draw a conclusion in context of the hypotheses. Make sure to cite appropriate output from above.**
 
-Based on a p-value of 0.0000000000000002, which is a smaller value than the significance level of 0.001, we have sufficient evidence to reject the null hypothesis. This means that we have sufficient evidence that there is a significant difference in at least one rodent species compared to the others. 
+Based on a p-value of 0.0000000000000002, which is a smaller value than the significance level of 0.001, we have sufficient evidence to reject the null hypothesis. This means that we have sufficient evidence that there is a significant difference in means of at least one rodent species compared to the others. 
+
+Reflection: I forgot to include "difference in means" in my response. The anova test is used to see if there is a difference in means between different groups and I simply said there is a difference between groups. In my revision, I made sure to include "difference in means" because this is a key aspect of what the anova test shows and it is inaccurate to just say there is a "difference between at least one rodent species compared to the others" based on the anova test without including the aspect about the "difference in means." 
 
 # Lab 2 Submission
 
@@ -323,3 +353,24 @@ For Lab 2 you will submit **only** your HTML file. Your HTML file is required to
 **If any of the options are not included, your Lab 2 or Challenge 2 assignment will receive an "Incomplete" and you will be required to submit a revision.**
 
 In addition, your document should not have any warnings or messages output in your HTML document. **If your HTML contains warnings or messages, you will receive an "Incomplete" for document formatting and you will be required to submit a revision.**
+
+## Challenge 
+
+```{r}
+library(ggridges)
+
+ggplot(data = surveys, 
+       mapping = aes(x = weight,
+        y = species, 
+        stat = "density_ridges",
+        position = "points_sina", 
+     
+                    )
+       ) +
+  geom_density_ridges() + 
+  labs(x = "Weight (in grams)" , 
+     y = "Species of Rodents", 
+     title = "Density Ridge Plots of Weights of Various Rodent Species")
+
+```
+
